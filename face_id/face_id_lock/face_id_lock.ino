@@ -8,10 +8,14 @@
 #define CAMERA_MODEL_AI_THINKER
 
 #define RED_LED 12
-#define GREEN_LED 13
-#define YELLOW_LED 14
+#define LOCK_OPEN_PIN 13
+#define GREEN_LED 14
 #define ENROLL_FACE_BUTTON_PIN 15
-#define LOCK_OPEN_PIN 16
+#define RECOGNIZE_FACE_BUTTON_PIN 16
+
+extern int8_t detection_enabled;
+extern int8_t recognition_enabled;
+extern int8_t is_enrolling;
 
 #include "camera_pins.h"
 
@@ -35,11 +39,10 @@ void setup()
     digitalWrite(LOCK_OPEN_PIN, LOW); // close the lock
     pinMode(RED_LED, OUTPUT);
     pinMode(GREEN_LED, OUTPUT);
-    pinMode(YELLOW_LED, OUTPUT);
     pinMode(ENROLL_FACE_BUTTON_PIN, INPUT_PULLUP);
+    pinMode(RECOGNIZE_FACE_BUTTON_PIN, INPUT_PULLUP);
     digitalWrite(RED_LED, LOW);
     digitalWrite(GREEN_LED, LOW);
-    digitalWrite(YELLOW_LED, LOW);
   
     Serial.begin(115200);
     Serial.setDebugOutput(true);
@@ -122,6 +125,9 @@ void setup()
     Serial.print("Camera Ready! Use 'http://");
     Serial.print(WiFi.localIP());
     Serial.println("' to connect");
+
+    // turn on face detection mode
+    detection_enabled = 1;
 }
 
 void loop() 
@@ -131,7 +137,6 @@ void loop()
         lock_open = true;
         digitalWrite(RED_LED, LOW);
         digitalWrite(GREEN_LED, HIGH);
-        digitalWrite(YELLOW_LED, LOW);
 
         frozen_milliseconds = millis();
         digitalWrite(LOCK_OPEN_PIN, HIGH);
@@ -146,10 +151,13 @@ void loop()
 
         digitalWrite(RED_LED, LOW);
         digitalWrite(GREEN_LED, LOW);
-        digitalWrite(YELLOW_LED, LOW);
 
     }
 
+    if(digitalRead(ENROLL_FACE_BUTTON_PIN) == 0)
+        is_enrolling = 1;
 
+    if(digitalRead(RECOGNIZE_FACE_BUTTON_PIN) == 0)
+        recognition_enabled = 1;
     
 }
