@@ -1,0 +1,20 @@
+{
+    "project_name":       "bootloader",
+    "project_path":       "/home/eugeny/esp/esp-idf/components/bootloader/subproject",
+    "build_dir":          "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader",
+    "config_file":        "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/sdkconfig",
+    "config_defaults":    "",
+    "app_elf":            "bootloader.elf",
+    "app_bin":            "bootloader.bin",
+    "git_revision":       "v4.4-dev-4-g73db14240",
+    "target":             "esp32",
+    "phy_data_partition": "",
+    "monitor_baud" :      "115200",
+    "monitor_toolprefix": "xtensa-esp32-elf-",
+    "config_environment" : {
+        "COMPONENT_KCONFIGS" : "/home/eugeny/esp/esp-idf/components/efuse/Kconfig;/home/eugeny/esp/esp-idf/components/esp32/Kconfig;/home/eugeny/esp/esp-idf/components/esp_common/Kconfig;/home/eugeny/esp/esp-idf/components/esp_system/Kconfig;/home/eugeny/esp/esp-idf/components/log/Kconfig;/home/eugeny/esp/esp-idf/components/spi_flash/Kconfig",
+        "COMPONENT_KCONFIGS_PROJBUILD" : "/home/eugeny/esp/esp-idf/components/bootloader/Kconfig.projbuild;/home/eugeny/esp/esp-idf/components/esptool_py/Kconfig.projbuild;/home/eugeny/esp/esp-idf/components/partition_table/Kconfig.projbuild"
+    },
+    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp32", "esp_common", "esp_hw_support", "esp_rom", "esp_system", "esptool_py", "hal", "log", "main", "micro-ecc", "partition_table", "soc", "spi_flash", "xtensa", "" ],
+    "build_component_paths" : [ "/home/eugeny/esp/esp-idf/components/bootloader", "/home/eugeny/esp/esp-idf/components/bootloader_support", "/home/eugeny/esp/esp-idf/components/efuse", "/home/eugeny/esp/esp-idf/components/esp32", "/home/eugeny/esp/esp-idf/components/esp_common", "/home/eugeny/esp/esp-idf/components/esp_hw_support", "/home/eugeny/esp/esp-idf/components/esp_rom", "/home/eugeny/esp/esp-idf/components/esp_system", "/home/eugeny/esp/esp-idf/components/esptool_py", "/home/eugeny/esp/esp-idf/components/hal", "/home/eugeny/esp/esp-idf/components/log", "/home/eugeny/esp/esp-idf/components/bootloader/subproject/main", "/home/eugeny/esp/esp-idf/components/bootloader/subproject/components/micro-ecc", "/home/eugeny/esp/esp-idf/components/partition_table", "/home/eugeny/esp/esp-idf/components/soc", "/home/eugeny/esp/esp-idf/components/spi_flash", "/home/eugeny/esp/esp-idf/components/xtensa", "" ]
+}
