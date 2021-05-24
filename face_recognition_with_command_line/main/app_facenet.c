@@ -30,6 +30,10 @@
 
 #include "driver/gpio.h"
 
+#include "fr_flash.h"
+#include "esp_partition.h"
+
+
 #define ENROLL_BUTTON_PIN GPIO_NUM_14
 #define RECOGNIZE_BUTTON_PIN GPIO_NUM_13
 //gpio_get_level(gpio_num_t gpio_num);
@@ -101,28 +105,219 @@ void task_process(void *arg)
                                                       FACE_HEIGHT,
                                                       3);
 
+    // load id list from flash
+    int id_count = read_face_id_from_flash(&id_list);
+    ESP_LOGI(TAG, "\nRead %d id-s from flash\n", id_count);
+
+    int8_t is_enrolling = 1;
+    if (id_count == FACE_ID_SAVE_NUMBER)
+    {
+        is_enrolling = 0;
+        ESP_LOGI(TAG, "\n>>> Max ID enrolled <<<\n");
+    }
+ 
     int8_t count_down_second = 3; //second
-    int8_t is_enrolling = 0;
     int32_t next_enroll_index = 0;
     int8_t left_sample_face;
 
-    //ESP_LOGI(TAG, "\nInit finished!\n");
-    //vTaskDelay(5000 / portTICK_PERIOD_MS);
+    ESP_LOGI(TAG, "\nInit finished!\n");
+    vTaskDelay(5000 / portTICK_PERIOD_MS);
 
     do
     {
+        int64_t start_time = esp_timer_get_time();
+
         //*
         int enroll_button = gpio_get_level(ENROLL_BUTTON_PIN);
         int recognize_button = gpio_get_level(RECOGNIZE_BUTTON_PIN);
 
-        if(enroll_button == 0)
-            ESP_LOGI(TAG, "<<< ENROLL BUTTON >>>\n");
-        if(recognize_button == 0)
-            ESP_LOGI(TAG, "<<< RECOGNIZE BUTTON >>>\n");
-        //*/
+        // ******************************************************************************************************
+        // ******************************************** ENROLL **************************************************
+        // ******************************************************************************************************
 
-        int64_t start_time = esp_timer_get_time();
-        /* 3. Get one image with camera */
+        if(enroll_button == 0)
+        {
+            ESP_LOGI(TAG, "<<< ENROLL BUTTON >>>\n");
+
+            if(is_enrolling)
+            {
+
+                // 3. Get one image with camera 
+                fb = esp_camera_fb_get();
+                if (!fb)
+                {
+                    ESP_LOGE(TAG, "Camera capture failed");
+                    continue;
+                }
+                int64_t fb_get_time = esp_timer_get_time();
+                //ESP_LOGI(TAG, "Get one frame in %lld ms.", (fb_get_time - start_time) / 1000);
+
+                // 4. Allocate image matrix to store RGB data 
+                image_matrix = dl_matrix3du_alloc(1, fb->width, fb->height, 3);
+
+                // 5. Transform image to RGB 
+                uint32_t res = fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);
+                if (true != res)
+                {
+                    ESP_LOGE(TAG, "fmt2rgb888 failed, fb: %d", fb->len);
+                    dl_matrix3du_free(image_matrix);
+                    continue;
+                }
+
+                esp_camera_fb_return(fb);
+
+                // 6. Do face detection 
+                box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);
+                //ESP_LOGI(TAG, "Detection time consumption: %lldms", (esp_timer_get_time() - fb_get_time) / 1000);
+
+                if (net_boxes)
+                {
+                    frame_num++;
+                    ESP_LOGI(TAG, "Face Detection Count: %d", frame_num);
+
+                    // 5. Do face alignment 
+                    if (align_face(net_boxes, image_matrix, aligned_face) == ESP_OK)
+                    {
+                        // 6. Do face enrollment 
+                        //left_sample_face = enroll_face(&id_list, aligned_face);
+                        left_sample_face = enroll_face_id_to_flash(&id_list, aligned_face);
+                        ESP_LOGI(TAG, "Face ID Enrollment: Take the %d%s sample",
+                                ENROLL_CONFIRM_TIMES - left_sample_face,
+                                number_suffix(ENROLL_CONFIRM_TIMES - left_sample_face));
+
+                        if (left_sample_face == 0)
+                        {
+                            next_enroll_index++;
+                            ESP_LOGI(TAG, "\nEnrolled Face ID: %d", id_list.tail);
+
+                            if (id_list.count == FACE_ID_SAVE_NUMBER)
+                            {
+                                is_enrolling = 0;
+                                ESP_LOGI(TAG, "\n>>> Max ID enrolled <<<\n");
+                                vTaskDelay(5000 / portTICK_PERIOD_MS);
+                            }
+                            else
+                            {
+                                ESP_LOGI(TAG, "Please log in another one.");
+                                vTaskDelay(5000 / portTICK_PERIOD_MS);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        ESP_LOGI(TAG, "Detected face is not proper.");
+                    }
+
+                    dl_lib_free(net_boxes->score);
+                    dl_lib_free(net_boxes->box);
+                    dl_lib_free(net_boxes->landmark);
+                    dl_lib_free(net_boxes);
+
+                }//  if (net_boxes)
+
+                dl_matrix3du_free(image_matrix);
+
+            }//  if(is_enrolling)
+            else
+            {
+                ESP_LOGI(TAG, "No place for new faces!");
+                vTaskDelay(5000 / portTICK_PERIOD_MS);
+            }
+
+        }// if(enroll_button == 0)
+        // ******************************************************************************************************
+        // **************************************** END ENROLL **************************************************
+        // ******************************************************************************************************
+
+
+        // ******************************************************************************************************
+        // ****************************************RECOGNITION **************************************************
+        // ******************************************************************************************************
+        if(recognize_button == 0)
+        {
+            ESP_LOGI(TAG, "<<< RECOGNIZE BUTTON >>>\n");
+
+        	// 3. Get one image with camera 
+        	fb = esp_camera_fb_get();
+        	if (!fb)
+        	{
+            	ESP_LOGE(TAG, "Camera capture failed");
+            	continue;
+        	}
+            int64_t fb_get_time = esp_timer_get_time();
+            //ESP_LOGI(TAG, "Get one frame in %lld ms.", (fb_get_time - start_time) / 1000);
+
+            // 4. Allocate image matrix to store RGB data 
+            image_matrix = dl_matrix3du_alloc(1, fb->width, fb->height, 3);
+
+            // 5. Transform image to RGB 
+            uint32_t res = fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);
+            if (true != res)
+            {
+                ESP_LOGE(TAG, "fmt2rgb888 failed, fb: %d", fb->len);
+                dl_matrix3du_free(image_matrix);
+                continue;
+            }
+
+            esp_camera_fb_return(fb);
+
+            // 6. Do face detection 
+            box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);
+            //ESP_LOGI(TAG, "Detection time consumption: %lldms", (esp_timer_get_time() - fb_get_time) / 1000);
+
+            if (net_boxes)
+            {
+                frame_num++;
+                ESP_LOGI(TAG, "Face Detection Count: %d", frame_num);
+
+                // 5. Do face alignment 
+                if (align_face(net_boxes, image_matrix, aligned_face) == ESP_OK)
+                {
+
+                    // 6. Do face recognition 
+                    int64_t recog_match_time = esp_timer_get_time();
+
+                    int matched_id = recognize_face(&id_list, aligned_face);
+                    if (matched_id >= 0)
+                    {
+                        ESP_LOGI(TAG, "Matched Face ID: %d", matched_id);
+                        vTaskDelay(5000 / portTICK_PERIOD_MS);
+                    }
+                    else
+                    {
+                        ESP_LOGI(TAG, "No Matched Face ID");
+                        vTaskDelay(5000 / portTICK_PERIOD_MS);
+                    }
+
+                    //ESP_LOGI(TAG, "Recognition time consumption: %lldms\n",
+                    //        (esp_timer_get_time() - recog_match_time) / 1000);
+                }
+                else
+                {
+                    ESP_LOGI(TAG, "Detected face is not proper.");
+                }
+
+                dl_lib_free(net_boxes->score);
+                dl_lib_free(net_boxes->box);
+                dl_lib_free(net_boxes->landmark);
+                dl_lib_free(net_boxes);
+
+            }//  if (net_boxes)
+
+            dl_matrix3du_free(image_matrix);
+
+        }
+        // ******************************************************************************************************
+        // ************************************END RECOGNITION **************************************************
+        // ******************************************************************************************************
+
+
+        // */
+
+
+        /*
+
+        // 3. Get one image with camera 
         fb = esp_camera_fb_get();
         if (!fb)
         {
@@ -132,10 +327,10 @@ void task_process(void *arg)
         int64_t fb_get_time = esp_timer_get_time();
         ESP_LOGI(TAG, "Get one frame in %lld ms.", (fb_get_time - start_time) / 1000);
 
-        /* 4. Allocate image matrix to store RGB data */
+        // 4. Allocate image matrix to store RGB data 
         image_matrix = dl_matrix3du_alloc(1, fb->width, fb->height, 3);
 
-        /* 5. Transform image to RGB */
+        // 5. Transform image to RGB 
         uint32_t res = fmt2rgb888(fb->buf, fb->len, fb->format, image_matrix->item);
         if (true != res)
         {
@@ -146,7 +341,7 @@ void task_process(void *arg)
 
         esp_camera_fb_return(fb);
 
-        /* 6. Do face detection */
+        // 6. Do face detection 
         box_array_t *net_boxes = face_detect(image_matrix, &mtmn_config);
         ESP_LOGI(TAG, "Detection time consumption: %lldms", (esp_timer_get_time() - fb_get_time) / 1000);
 
@@ -155,7 +350,7 @@ void task_process(void *arg)
             frame_num++;
             ESP_LOGI(TAG, "Face Detection Count: %d", frame_num);
 
-            /* 5. Do face alignment */
+            // 5. Do face alignment 
             if (align_face(net_boxes, image_matrix, aligned_face) == ESP_OK)
             {
                 //count down
@@ -171,7 +366,7 @@ void task_process(void *arg)
                         ESP_LOGI(TAG, "\n>>> Face ID Enrollment Starts <<<\n");
                 }
 
-                /* 6. Do face enrollment */
+                // 6. Do face enrollment 
                 if (is_enrolling == 1)
                 {
                     left_sample_face = enroll_face(&id_list, aligned_face);
@@ -197,7 +392,7 @@ void task_process(void *arg)
                         }
                     }
                 }
-                /* 6. Do face recognition */
+                // 6. Do face recognition 
                 else
                 {
                     int64_t recog_match_time = esp_timer_get_time();
@@ -225,7 +420,9 @@ void task_process(void *arg)
 
         dl_matrix3du_free(image_matrix);
 
-        vTaskDelay(2000 / portTICK_PERIOD_MS);
+        //*/
+
+        //vTaskDelay(2000 / portTICK_PERIOD_MS);
 
     } while (1);
 } /*}}}*/

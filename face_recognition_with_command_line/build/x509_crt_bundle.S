@@ -1,4 +1,4 @@
-/* * Data converted from /home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from /home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

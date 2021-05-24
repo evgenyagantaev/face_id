@@ -1,13 +1,13 @@
 # Target labels
  bootloader
 # Source files and their labels
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader.rule
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader-complete.rule
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
-/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader.rule
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader-complete.rule
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule

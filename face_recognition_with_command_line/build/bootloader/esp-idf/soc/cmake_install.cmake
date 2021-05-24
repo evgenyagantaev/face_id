@@ -1,4 +1,4 @@
-# Install script for directory: /home/eugeny/esp/esp-idf/components/soc
+# Install script for directory: /home/oem/esp/esp-idf/components/soc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader/esp-idf/soc/esp32/cmake_install.cmake")
+  include("/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader/esp-idf/soc/esp32/cmake_install.cmake")
 
 endif()
 

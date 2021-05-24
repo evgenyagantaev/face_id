@@ -1,4 +1,4 @@
-# Install script for directory: /home/eugeny/workspace/esp-who/components/esp-sr
+# Install script for directory: /home/oem/workspace/face_id/esp-who/components/esp-sr
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -1,4 +1,4 @@
-# Install script for directory: /home/eugeny/esp/esp-idf/components/mbedtls/mbedtls
+# Install script for directory: /home/oem/esp/esp-idf/components/mbedtls/mbedtls
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,8 +34,8 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/esp-idf/mbedtls/mbedtls/library/cmake_install.cmake")
-  include("/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/esp-idf/mbedtls/mbedtls/include/cmake_install.cmake")
+  include("/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/esp-idf/mbedtls/mbedtls/library/cmake_install.cmake")
+  include("/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/esp-idf/mbedtls/mbedtls/include/cmake_install.cmake")
 
 endif()
 

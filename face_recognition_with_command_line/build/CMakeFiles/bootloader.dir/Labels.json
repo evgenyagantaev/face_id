@@ -2,34 +2,34 @@
 	"sources" : 
 	[
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader"
 		},
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader.rule"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader.rule"
 		},
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader-complete.rule"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/CMakeFiles/bootloader-complete.rule"
 		},
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
 		},
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
 		},
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
 		},
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
 		},
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
 		},
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
 		},
 		{
-			"file" : "/home/eugeny/workspace/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+			"file" : "/home/oem/workspace/face_id/esp-who/examples/single_chip/face_recognition_with_command_line/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
 		}
 	],
 	"target" : 

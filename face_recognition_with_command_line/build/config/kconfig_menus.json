@@ -193,7 +193,7 @@
                     }
                 ],
                 "depends_on": null,
-                "help": "Select the way the application is built.\n\nBy default, the application is built as a binary file in a format compatible with\nthe ESP-IDF bootloader. In addition to this application, 2nd stage bootloader is\nalso built. Application and bootloader binaries can be written into flash and\nloaded/executed from there.\n\nAnother option, useful for only very small and limited applications, is to only link\nthe .elf file of the application, such that it can be loaded directly into RAM over\nJTAG. Note that since IRAM and DRAM sizes are very limited, it is not possible to\nbuild any complex application this way. However for kinds of testing and debugging,\nthis option may provide faster iterations, since the application does not need to be\nwritten into flash.\nNote that at the moment, ESP-IDF does not contain all the startup code required to\ninitialize the CPUs and ROM memory (data/bss). Therefore it is necessary to execute\na bit of ROM code prior to executing the application. A gdbinit file may look as follows (for ESP32):\n\n    # Connect to a running instance of OpenOCD\n    target remote :3333\n    # Reset and halt the target\n    mon reset halt\n    # Run to a specific point in ROM code,\n    #  where most of initialization is complete.\n    thb *0x40007901\n    c\n    # Load the application into RAM\n    load\n    # Run till app_main\n    tb app_main\n    c\n\nExecute this gdbinit file as follows:\n\n    xtensa-esp32-elf-gdb build/app-name.elf -x gdbinit\n\nExample gdbinit files for other targets can be found in tools/test_apps/system/gdb_loadable_elf/\n\nRecommended sdkconfig.defaults for building loadable ELF files is as follows.\nCONFIG_APP_BUILD_TYPE_ELF_RAM is required, other options help reduce application\nmemory footprint.\n\n    CONFIG_APP_BUILD_TYPE_ELF_RAM=y\n    CONFIG_VFS_SUPPORT_TERMIOS=\n    CONFIG_NEWLIB_NANO_FORMAT=y\n    CONFIG_ESP_SYSTEM_PANIC_PRINT_HALT=y\n    CONFIG_ESP_DEBUG_STUBS_ENABLE=\n    CONFIG_ESP_ERR_TO_NAME_LOOKUP=",
+                "help": "Select the way the application is built.\n\nBy default, the application is built as a binary file in a format compatible with\nthe ESP32 bootloader. In addition to this application, 2nd stage bootloader is\nalso built. Application and bootloader binaries can be written into flash and\nloaded/executed from there.\n\nAnother option, useful for only very small and limited applications, is to only link\nthe .elf file of the application, such that it can be loaded directly into RAM over\nJTAG. Note that since IRAM and DRAM sizes are very limited, it is not possible to\nbuild any complex application this way. However for kinds of testing and debugging,\nthis option may provide faster iterations, since the application does not need to be\nwritten into flash.\nNote that at the moment, ESP-IDF does not contain all the startup code required to\ninitialize the CPUs and ROM memory (data/bss). Therefore it is necessary to execute\na bit of ROM code prior to executing the application. A gdbinit file may look as follows:\n\n    # Connect to a running instance of OpenOCD\n    target remote :3333\n    # Reset and halt the target\n    mon reset halt\n    # Run to a specific point in ROM code,\n    #  where most of initialization is complete.\n    thb *0x40007901\n    c\n    # Load the application into RAM\n    load\n    # Run till app_main\n    tb app_main\n    c\n\nExecute this gdbinit file as follows:\n\n    xtensa-esp32-elf-gdb build/app-name.elf -x gdbinit\n\nRecommended sdkconfig.defaults for building loadable ELF files is as follows.\nCONFIG_APP_BUILD_TYPE_ELF_RAM is required, other options help reduce application\nmemory footprint.\n\n    CONFIG_APP_BUILD_TYPE_ELF_RAM=y\n    CONFIG_VFS_SUPPORT_TERMIOS=\n    CONFIG_NEWLIB_NANO_FORMAT=y\n    CONFIG_ESP_SYSTEM_PANIC_PRINT_HALT=y\n    CONFIG_ESP_DEBUG_STUBS_ENABLE=\n    CONFIG_ESP_ERR_TO_NAME_LOOKUP=",
                 "id": "build-type-application-build-type",
                 "name": "APP_BUILD_TYPE",
                 "title": "Application build type",
@@ -556,7 +556,7 @@
                         "type": "int"
                     }
                 ],
-                "depends_on": "!BOOTLOADER_APP_ANTI_ROLLBACK",
+                "depends_on": null,
                 "help": "Allows to run the test app from \"TEST\" partition.\nA boot from \"test\" partition will occur if there is a GPIO input pulled low while device starts up.\nSee settings below.",
                 "id": "BOOTLOADER_APP_TEST",
                 "name": "BOOTLOADER_APP_TEST",
@@ -3455,6 +3455,16 @@
                                 "type": "int"
                             },
                             {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "Use pre-determined parameter set to control the use of RF by Bluetooth,\nso that Bluetooth can compete for RF with Wi-fi to support coexistence.",
+                                "id": "BT_CTRL_COEX_PARAMETERS_ENABLE",
+                                "name": "BT_CTRL_COEX_PARAMETERS_ENABLE",
+                                "range": null,
+                                "title": "Allow Bluetooth preemption in the use of RF to support coexistence with Wi-Fi",
+                                "type": "bool"
+                            },
+                            {
                                 "children": [
                                     {
                                         "children": [],
@@ -3685,6 +3695,16 @@
                                 "type": "int"
                             },
                             {
+                                "children": [],
+                                "depends_on": null,
+                                "help": "Send notifications of Bluetooth working status to support coexistence with Wi-Fi.",
+                                "id": "BT_CTRL_COEX_USE_HOOKS",
+                                "name": "BT_CTRL_COEX_USE_HOOKS",
+                                "range": null,
+                                "title": "Communicate Bluetooth working status with Wi-Fi to support coexistence",
+                                "type": "bool"
+                            },
+                            {
                                 "children": [
                                     {
                                         "children": [],
@@ -3815,46 +3835,6 @@
                                 "range": null,
                                 "title": "BLE Scan Duplicate Options",
                                 "type": "bool"
-                            },
-                            {
-                                "children": [
-                                    {
-                                        "children": [],
-                                        "depends_on": "<choice BT_CTRL_COEX_PHY_CODED_TX_RX_TLIM>",
-                                        "help": "Always enable the limitation on max tx/rx time for Coded-PHY connection",
-                                        "id": "BT_CTRL_COEX_PHY_CODED_TX_RX_TLIM_EN",
-                                        "name": "BT_CTRL_COEX_PHY_CODED_TX_RX_TLIM_EN",
-                                        "range": null,
-                                        "title": "Force Enable",
-                                        "type": "bool"
-                                    },
-                                    {
-                                        "children": [],
-                                        "depends_on": "<choice BT_CTRL_COEX_PHY_CODED_TX_RX_TLIM>",
-                                        "help": "Disable the limitation on max tx/rx time for Coded-PHY connection",
-                                        "id": "BT_CTRL_COEX_PHY_CODED_TX_RX_TLIM_DIS",
-                                        "name": "BT_CTRL_COEX_PHY_CODED_TX_RX_TLIM_DIS",
-                                        "range": null,
-                                        "title": "Force Disable",
-                                        "type": "bool"
-                                    }
-                                ],
-                                "depends_on": "ESP32_WIFI_SW_COEXIST_ENABLE",
-                                "help": "When using PHY-Coded in BLE connection, limitation on max tx/rx time can be applied to\nbetter avoid dramatic performance deterioration of Wi-Fi.",
-                                "id": "component-config-bluetooth-bluetooth-controller-esp32c3-bluetooth-low-energy--coexistence-limit-on-max-tx-rx-time-for-coded-phy-connection",
-                                "name": "BT_CTRL_COEX_PHY_CODED_TX_RX_TLIM",
-                                "title": "Coexistence: limit on MAX Tx/Rx time for coded-PHY connection",
-                                "type": "choice"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": null,
-                                "help": null,
-                                "id": "BT_CTRL_COEX_PHY_CODED_TX_RX_TLIM_EFF",
-                                "name": "BT_CTRL_COEX_PHY_CODED_TX_RX_TLIM_EFF",
-                                "range": null,
-                                "title": null,
-                                "type": "int"
                             },
                             {
                                 "children": [
@@ -11283,16 +11263,6 @@
                                 ],
                                 "title": "Amount of Ethernet DMA Tx buffers",
                                 "type": "int"
-                            },
-                            {
-                                "children": [],
-                                "depends_on": "ETH_DMA_RX_BUFFER_NUM > 15 && ETH_USE_ESP32_EMAC",
-                                "help": "Ethernet MAC engine on ESP32 doesn't feature a flow control logic.\nThe MAC driver can perform a software flow control if you enable this option.\nNote that, if the RX buffer number is small, enabling software flow control will\ncause obvious performance loss.",
-                                "id": "ETH_SOFT_FLOW_CONTROL",
-                                "name": "ETH_SOFT_FLOW_CONTROL",
-                                "range": null,
-                                "title": "Enable software flow control",
-                                "type": "bool"
                             }
                         ],
                         "depends_on": "IDF_TARGET_ESP32",
@@ -17425,7 +17395,7 @@
                     {
                         "children": [],
                         "depends_on": "IDF_TARGET_ESP32S3 || IDF_TARGET_ESP32C3",
-                        "help": "Enable this flag to use new SPI flash driver functions from ROM instead of ESP-IDF.\n\nIf keeping this as \"n\" in your project, you will have less free IRAM.\nBut you can use all of our flash features.\n\nIf making this as \"y\" in your project, you will increase free IRAM.\nBut you may miss out on some flash features and support for new flash chips.\n\nCurrently the ROM cannot support the following features:\n\n- SPI_FLASH_AUTO_SUSPEND (C3, S3)",
+                        "help": "Enable this flag to use new SPI flash driver functions from ROM instead of ESP-IDF.\n\nIf keeping this as \"n\" in your project, you will have less free IRAM.\nBut you can use all of our flash features.\n\nIf making this as \"y\" in your project, you will increase free IRAM.\nBut you may miss out on some flash features and support for new flash chips.",
                         "id": "SPI_FLASH_ROM_IMPL",
                         "name": "SPI_FLASH_ROM_IMPL",
                         "range": null,
@@ -17536,7 +17506,7 @@
                     {
                         "children": [],
                         "depends_on": "IDF_TARGET_ESP32C3 && !SPI_FLASH_USE_LEGACY_IMPL && !SPI_FLASH_ROM_IMPL",
-                        "help": "This option is default n before ESP32-C3, because it needs bootloader support.\n\nCAUTION: If you want to OTA to an app with this feature turned on, please make\nsure the bootloader has the support for it. (later than IDF v4.3)",
+                        "help": "This is made default n, because this needs bootloader support.\nThis feature needs special bootloader support.\nIf you want to OTA to a image with this feature\n(e.g. turn on this config option for OTA image), please make\nsure the bootloader has the support for it. (above IDF v4.3)",
                         "id": "SPI_FLASH_AUTO_SUSPEND",
                         "name": "SPI_FLASH_AUTO_SUSPEND",
                         "range": null,
